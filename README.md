@@ -1,2 +1,3 @@
 # WWDC22-Apple-Scholarship
-WWDC21 Apple Scholarship
+
+A WWDC22 Apple Scholarship program created by RoyRao. [Developing😉]
