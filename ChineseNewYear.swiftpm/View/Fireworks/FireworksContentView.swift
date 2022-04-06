@@ -15,6 +15,7 @@ public struct FireworksContentView: View {
         GeometryReader { geo in
             EmitterView(frameSize: geo.size)
         }
+        .background(Color.black)
     }
 }
 
