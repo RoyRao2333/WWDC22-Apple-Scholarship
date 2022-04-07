@@ -49,7 +49,8 @@ public struct RPReceiveContentView: View {
             .background(Color.white)
             .clipped()
         }
-//        .aspectRatio(0.46, contentMode: .fit)
+        .background(Color.gray)
+        .aspectRatio(0.69, contentMode: .fit)
         .edgesIgnoringSafeArea(.all)
         .onChange(of: rotation) { _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
