@@ -45,13 +45,12 @@ public struct RPReceiveContentView: View {
                     .offset(y: -geo.size.height / 4 + 40)
                     .isHidden(hideBtn)
             }
-            .frame(width: geo.size.width, height: geo.size.height)
+            .frame(width: 300, height: 300)
             .background(Color.white)
             .clipped()
         }
-        .background(Color.gray)
-        .aspectRatio(0.69, contentMode: .fit)
-        .edgesIgnoringSafeArea(.all)
+//        .aspectRatio(0.69, contentMode: .fit)
+        .edgesIgnoringSafeArea(.vertical)
         .onChange(of: rotation) { _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 withAnimation {
