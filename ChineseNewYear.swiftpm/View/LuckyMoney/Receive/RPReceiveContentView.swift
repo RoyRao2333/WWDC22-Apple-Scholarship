@@ -11,6 +11,7 @@ public struct RPReceiveContentView: View {
     @Binding var isOpened: Bool
     @State private var rotation: Double = 0
     @State private var hideBtn = false
+    @State private var redPacketSize: CGSize = .zero
     
     public var model: RedPackageModel
     
@@ -28,7 +29,10 @@ public struct RPReceiveContentView: View {
         GeometryReader { geo in
             ZStack(alignment: .bottom) {
                 RPReceiveInfoView(showReceive: $showReceive, model: model)
-                    .frame(width: geo.size.width, height: geo.size.height / 4 * 3)
+                    .background(Color.white)
+                    .measureSize { size in
+                        redPacketSize = size
+                    }
                 
                 Color(hex: "DE604C")
                     .offset(y: isOpened ? geo.size.height * 2 : 0)
@@ -36,21 +40,21 @@ public struct RPReceiveContentView: View {
                 
                 Color(hex: "#ac322a")
                     .clipShape(Circle())
-                    .frame(width: geo.size.height, height: geo.size.height)
-                    .offset(y: -geo.size.height / 4)
-                    .offset(y: isOpened ? -geo.size.height / 2 : 0)
+                    .scaleEffect(2)
+                    .offset(y: -redPacketSize.height / 2)
+                    .offset(y: isOpened ? -geo.size.height / 4 : 0)
                     .clipped()
                 
                 RPReceiveOpenButton(rotation: $rotation)
-                    .offset(y: -geo.size.height / 4 + 40)
+                    .offset(y: -redPacketSize.height / 4 - 20 )
                     .isHidden(hideBtn)
             }
-            .frame(width: 300, height: 300)
-            .background(Color.white)
-            .clipped()
+            .frame(width: 670, height: 970)
+            .clipShape(RoundedRectangle(cornerRadius: 50))
+            .position(x: geo.frame(in: .local).midX, y: geo.frame(in: .local).midY)
         }
-//        .aspectRatio(0.69, contentMode: .fit)
         .edgesIgnoringSafeArea(.vertical)
+        .background(Color.black.opacity(0.5))
         .onChange(of: rotation) { _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 withAnimation {
@@ -62,5 +66,20 @@ public struct RPReceiveContentView: View {
                 }
             }
         }
+    }
+}
+
+struct RPReceiveContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        RPReceiveContentView(model: RedPackageModel(
+            isMine: false,
+            senderName: "Alex",
+            senderAvatar: "👱🏻",
+            msg: "Best Wishes to you, \("Roy")! Without your help, I couldn't have won the scholarship. You are my best buddy, happy New Year!",
+            amount: "500",
+            receiverName: "Roy",
+            receiverAvatar: "🧑🏻‍💻"
+        ), showReceive: .constant(true), isOpened: .constant(false))
+        .previewDevice("iPad Pro (12.9-inch) (5th generation)")
     }
 }

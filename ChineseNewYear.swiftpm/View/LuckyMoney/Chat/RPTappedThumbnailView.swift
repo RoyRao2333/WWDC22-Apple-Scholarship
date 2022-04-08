@@ -21,7 +21,7 @@ struct RPTappedThumbnailView: View {
                         .frame(width: 60, height: 60)
                     
                     VStack(alignment: .leading) {
-                        Text(model.msg)
+                        Text("Best Wishes!")
                             .font(.system(size: 30, weight: .medium))
                             .lineLimit(1)
                         

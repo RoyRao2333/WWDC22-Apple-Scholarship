@@ -14,6 +14,9 @@ struct RPReceiveInfoView: View {
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 30) {
+                Spacer()
+                    .frame(height: geo.size.height / 2)
+                
                 VStack(spacing: 5) {
                     Text("\(model.senderAvatar) \(model.senderName)'s Red Packet")
                         .font(.system(size: 30, weight: .medium))
@@ -21,7 +24,7 @@ struct RPReceiveInfoView: View {
                         .foregroundColor(Color(hex: "161616"))
                     
                     Text(model.msg)
-                        .font(.system(size: 25))
+                        .font(.system(size: 20))
                         .multilineTextAlignment(.center)
                         .lineLimit(3)
                         .foregroundColor(Color(hex: "B5B5B5"))

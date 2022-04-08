@@ -96,4 +96,8 @@ extension View {
             }
         }
     }
+    
+    var screenRect: CGRect {
+        UIScreen.main.bounds
+    }
 }

@@ -18,31 +18,27 @@ public struct ReceiveChatView: View {
     }
     
     public var body: some View {
-        NavigationView {
-            ZStack {
-                VStack(spacing: 0) {
-                    ChatTopView(avatar: "👱🏻", name: "Alex")
-                    
-                    GeometryReader { _ in
-                        ChatListView(
-                            isOpened: $isOpened,
-                            showSend: .constant(false),
-                            showReceive: $showReceive,
-                            model: model,
-                            playMode: .receive
-                        )
-                    }
-                    
-                    ChatBottomView(isOpened: $isOpened, model: model, playMode: .receive)
+        ZStack {
+            VStack(spacing: 0) {
+                ChatTopView(avatar: "👱🏻", name: "Alex")
+                
+                GeometryReader { _ in
+                    ChatListView(
+                        isOpened: $isOpened,
+                        showSend: .constant(false),
+                        showReceive: $showReceive,
+                        model: model,
+                        playMode: .receive
+                    )
                 }
                 
-                if showReceive {
-                    RPReceiveContentView(model: model, showReceive: $showReceive, isOpened: $isOpened)
-                }
+                ChatBottomView(isOpened: $isOpened, model: model, playMode: .receive)
             }
-            .navigationBarHidden(true)
+            
+            if showReceive {
+                RPReceiveContentView(model: model, showReceive: $showReceive, isOpened: $isOpened)
+            }
         }
-        .navigationViewStyle(.stack)
-        .accentColor(.white)
+//        .navigationBarHidden(true)
     }
 }

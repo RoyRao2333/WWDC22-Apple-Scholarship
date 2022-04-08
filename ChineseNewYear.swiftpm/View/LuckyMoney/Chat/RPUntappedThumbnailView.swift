@@ -28,7 +28,7 @@ struct RPUntappedThumbnailView: View {
                         .scaledToFit()
                         .frame(width: 60, height: 60)
                     
-                    Text(message)
+                    Text("Best Wishes!")
                         .font(.system(size: 30, weight: .medium))
                         .lineLimit(1)
                         .foregroundColor(.white)

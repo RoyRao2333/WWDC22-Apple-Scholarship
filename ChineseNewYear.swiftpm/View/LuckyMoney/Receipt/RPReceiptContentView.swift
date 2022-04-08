@@ -17,14 +17,28 @@ struct RPReceiptContentView: View {
                 
                 Color(hex: "#ac322a")
                     .clipShape(Circle())
-                    .frame(width: geo.size.height, height: geo.size.height)
-                    .offset(y: -geo.size.height / 2)
+                    .scaleEffect(2)
+                    .offset(y: -geo.size.height)
             }
             .frame(width: geo.size.width)
             .background(Color.white)
             .clipped()
         }
-        .aspectRatio(0.46, contentMode: .fill)
         .edgesIgnoringSafeArea(.all)
+    }
+}
+
+struct RPReceiptContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        RPReceiptContentView(model: RedPackageModel(
+            isMine: false,
+            senderName: "Alex",
+            senderAvatar: "👱🏻",
+            msg: "Best Wishes to you, \("Roy")! Without your help, I couldn't have won the scholarship. You are my best buddy, happy New Year!",
+            amount: "500",
+            receiverName: "Roy",
+            receiverAvatar: "🧑🏻‍💻"
+        ))
+        .previewDevice("iPad Pro (12.9-inch) (5th generation)")
     }
 }

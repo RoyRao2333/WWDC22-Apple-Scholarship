@@ -19,31 +19,27 @@ public struct SendChatView: View {
     }
     
     public var body: some View {
-        NavigationView {
-            ZStack {
-                VStack(spacing: 0) {
-                    ChatTopView(avatar: "👱🏻‍♀️", name: "Lisa")
-                    
-                    GeometryReader { _ in
-                        ChatListView(
-                            isOpened: $isOpened,
-                            showSend: $showSend,
-                            showReceive: .constant(false),
-                            model: model,
-                            playMode: .send
-                        )
-                    }
-                    
-                    ChatBottomView(isOpened: $isOpened, model: model, playMode: .send)
+        ZStack {
+            VStack(spacing: 0) {
+                ChatTopView(avatar: "👱🏻‍♀️", name: "Lisa")
+                
+                GeometryReader { _ in
+                    ChatListView(
+                        isOpened: $isOpened,
+                        showSend: $showSend,
+                        showReceive: .constant(false),
+                        model: model,
+                        playMode: .send
+                    )
                 }
                 
-                if showSend {
-                    RPSendContentView(showSend: $showSend, model: model)
-                }
+                ChatBottomView(isOpened: $isOpened, model: model, playMode: .send)
             }
-            .navigationBarHidden(true)
+            
+            if showSend {
+                RPSendContentView(showSend: $showSend, model: model)
+            }
         }
-        .navigationViewStyle(.stack)
-        .accentColor(.white)
+//        .navigationBarHidden(true)
     }
 }

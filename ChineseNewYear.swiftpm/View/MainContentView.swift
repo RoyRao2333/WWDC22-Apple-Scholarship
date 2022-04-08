@@ -10,7 +10,7 @@ struct MainContentView: View {
                         isMine: false,
                         senderName: "Alex",
                         senderAvatar: "👱🏻",
-                        msg: "Best Wishes to you, \("Roy")! Without your help, I couldn't have won the scholarship. You are my best buddy, happy New Year!",
+                        msg: "How is it going, \("Roy")? Without your help, I couldn't have won the scholarship. You are my best buddy, happy New Year!",
                         amount: "500",
                         receiverName: "Roy",
                         receiverAvatar: "🧑🏻‍💻"
