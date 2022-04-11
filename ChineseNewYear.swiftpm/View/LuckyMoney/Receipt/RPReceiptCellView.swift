@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct RPReceiptCellView: View {
-    var model: RedPackageModel
+    var model: RedPacketModel
     
     var body: some View {
         HStack(spacing: 10) {

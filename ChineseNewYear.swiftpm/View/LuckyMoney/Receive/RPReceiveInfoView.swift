@@ -7,9 +7,8 @@
 import SwiftUI
 
 struct RPReceiveInfoView: View {
+    @ObservedObject private var service: RPService = .shared
     @Binding var showReceive: Bool
-    
-    var model: RedPackageModel
     
     var body: some View {
         GeometryReader { geo in
@@ -18,12 +17,12 @@ struct RPReceiveInfoView: View {
                     .frame(height: geo.size.height / 2)
                 
                 VStack(spacing: 5) {
-                    Text("\(model.senderAvatar) \(model.senderName)'s Red Packet")
+                    Text("\(service.alexRedPacketModel.senderAvatar) \(service.alexRedPacketModel.senderName)'s Red Packet")
                         .font(.system(size: 30, weight: .medium))
                         .lineLimit(1)
                         .foregroundColor(Color(hex: "161616"))
                     
-                    Text(model.msg)
+                    Text(service.alexRedPacketModel.msg)
                         .font(.system(size: 20))
                         .multilineTextAlignment(.center)
                         .lineLimit(3)
@@ -32,7 +31,7 @@ struct RPReceiveInfoView: View {
                 .padding(.horizontal, 20)
                 
                 VStack(spacing: 10) {
-                    Text(model.amount)
+                    Text(service.alexRedPacketModel.amount)
                         .font(.system(size: 60, weight: .semibold))
                     
                     +

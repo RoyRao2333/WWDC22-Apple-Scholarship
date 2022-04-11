@@ -11,11 +11,7 @@ public struct ReceiveChatView: View {
     @State private var isOpened: Bool = false
     @State private var showReceive: Bool = false
     
-    private var model: RedPackageModel
-    
-    public init(model: RedPackageModel) {
-        self.model = model
-    }
+    public init() {}
     
     public var body: some View {
         ZStack {
@@ -27,16 +23,15 @@ public struct ReceiveChatView: View {
                         isOpened: $isOpened,
                         showSend: .constant(false),
                         showReceive: $showReceive,
-                        model: model,
                         playMode: .receive
                     )
                 }
                 
-                ChatBottomView(isOpened: $isOpened, model: model, playMode: .receive)
+                ChatBottomView(isOpened: $isOpened, playMode: .receive)
             }
             
             if showReceive {
-                RPReceiveContentView(model: model, showReceive: $showReceive, isOpened: $isOpened)
+                RPReceiveContentView(showReceive: $showReceive, isOpened: $isOpened)
             }
         }
     }

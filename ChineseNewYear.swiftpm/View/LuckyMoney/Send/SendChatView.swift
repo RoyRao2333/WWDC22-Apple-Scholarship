@@ -12,12 +12,6 @@ public struct SendChatView: View {
     @State private var isOpened: Bool = false
     @State private var showSend: Bool = true
     
-    private var model: RedPackageModel
-    
-    public init(model: RedPackageModel) {
-        self.model = model
-    }
-    
     public var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -28,16 +22,15 @@ public struct SendChatView: View {
                         isOpened: $isOpened,
                         showSend: $showSend,
                         showReceive: .constant(false),
-                        model: model,
                         playMode: .send
                     )
                 }
                 
-                ChatBottomView(isOpened: $isOpened, model: model, playMode: .send)
+                ChatBottomView(isOpened: $isOpened, playMode: .send)
             }
             
             if showSend {
-                RPSendContentView(showSend: $showSend, model: model)
+                RPSendContentView(showSend: $showSend)
             }
         }
 //        .navigationBarHidden(true)

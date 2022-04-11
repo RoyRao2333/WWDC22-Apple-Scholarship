@@ -9,13 +9,11 @@ import SwiftUI
 struct RPSendContentView: View {
     @Binding var showSend: Bool
     
-    var model: RedPackageModel
-    
     var body: some View {
         VStack(spacing: 50) {
             RPSendTopView()
             
-            RPSendDesignView(showSend: $showSend, model: model)
+            RPSendDesignView(showSend: $showSend)
         }
         .padding(30)
         .background(Color(hex: "EDEDED"))

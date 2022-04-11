@@ -11,7 +11,7 @@ struct ChatRPCellView: View {
     @Binding var showReceive: Bool
     @Binding var isOpened: Bool
     
-    var model: RedPackageModel
+    var model: RedPacketModel
     var playMode: RPPlayMode
     
     var body: some View {

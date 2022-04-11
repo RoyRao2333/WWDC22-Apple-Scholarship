@@ -7,28 +7,16 @@
 import SwiftUI
 
 public struct RPReceiveContentView: View {
-    @Binding var showReceive: Bool
-    @Binding var isOpened: Bool
     @State private var rotation: Double = 0
     @State private var hideBtn = false
     @State private var redPacketSize: CGSize = .zero
-    
-    public var model: RedPackageModel
-    
-    public init(
-        model: RedPackageModel,
-        showReceive: Binding<Bool>,
-        isOpened: Binding<Bool>
-    ) {
-        self._showReceive = showReceive
-        self._isOpened = isOpened
-        self.model = model
-    }
+    @Binding var showReceive: Bool
+    @Binding var isOpened: Bool
     
     public var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .bottom) {
-                RPReceiveInfoView(showReceive: $showReceive, model: model)
+                RPReceiveInfoView(showReceive: $showReceive)
                     .background(Color.white)
                     .measureSize { size in
                         redPacketSize = size
@@ -71,15 +59,7 @@ public struct RPReceiveContentView: View {
 
 struct RPReceiveContentView_Previews: PreviewProvider {
     static var previews: some View {
-        RPReceiveContentView(model: RedPackageModel(
-            isMine: false,
-            senderName: "Alex",
-            senderAvatar: "👱🏻",
-            msg: "Best Wishes to you, \("Roy")! Without your help, I couldn't have won the scholarship. You are my best buddy, happy New Year!",
-            amount: "500",
-            receiverName: "Roy",
-            receiverAvatar: "🧑🏻‍💻"
-        ), showReceive: .constant(true), isOpened: .constant(false))
+        RPReceiveContentView(showReceive: .constant(true), isOpened: .constant(false))
         .previewDevice("iPad Pro (12.9-inch) (5th generation)")
     }
 }

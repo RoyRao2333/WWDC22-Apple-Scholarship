@@ -12,7 +12,6 @@ struct ChatListView: View {
     @Binding var showSend: Bool
     @Binding var showReceive: Bool
     
-    var model: RedPackageModel
     var playMode: RPPlayMode
     
     var body: some View {
@@ -20,7 +19,7 @@ struct ChatListView: View {
             switch playMode {
                 case .send:
                     // Your Red Packet
-                    if !showSend {
+                    if !showSend, let model = service.myRedPacketModel {
                         ChatRPCellView(
                             showSend: $showSend,
                             showReceive: $showReceive,
@@ -44,7 +43,15 @@ struct ChatListView: View {
                         showSend: $showSend,
                         showReceive: $showReceive,
                         isOpened: $isOpened,
-                        model: model,
+                        model: RedPacketModel(
+                            isMine: false,
+                            senderName: "Alex",
+                            senderAvatar: "👱🏻",
+                            msg: "Best Wishes to you, \(service.yourNickName)! Without your help, I couldn't have won the scholarship. You are my best buddy, happy New Year!",
+                            amount: "500",
+                            receiverName: service.yourNickName,
+                            receiverAvatar: "🧑🏻‍💻"
+                        ),
                         playMode: playMode
                     )
                     

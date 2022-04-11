@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct RPTappedThumbnailView: View {
-    var model: RedPackageModel
+    var model: RedPacketModel
     
     var body: some View {
         NavigationLink {

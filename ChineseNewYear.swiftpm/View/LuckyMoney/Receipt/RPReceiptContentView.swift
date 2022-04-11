@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct RPReceiptContentView: View {
-    var model: RedPackageModel
+    var model: RedPacketModel
     
     var body: some View {
         GeometryReader { geo in
@@ -30,7 +30,7 @@ struct RPReceiptContentView: View {
 
 struct RPReceiptContentView_Previews: PreviewProvider {
     static var previews: some View {
-        RPReceiptContentView(model: RedPackageModel(
+        RPReceiptContentView(model: RedPacketModel(
             isMine: false,
             senderName: "Alex",
             senderAvatar: "👱🏻",

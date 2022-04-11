@@ -7,9 +7,10 @@
 import SwiftUI
 
 struct RPSendDesignView: View {
+    @ObservedObject private var service: RPService = .shared
+    @State private var amount = ""
+    @State private var message = ""
     @Binding var showSend: Bool
-    
-    var model: RedPackageModel
     
     var body: some View {
         VStack {
@@ -21,10 +22,11 @@ struct RPSendDesignView: View {
                     
                     Spacer()
                     
-                    Text("¥ \(model.amount.isEmpty ? "0.00" : model.amount)")
+                    TextField("¥ 0.00", text: $amount)
                         .lineLimit(1)
                         .multilineTextAlignment(.trailing)
                         .foregroundColor(Color(hex: "B5B5B5"))
+                        .modifier(NumberOnlyTextField(text: $amount))
                 }
                 .padding()
                 .background(Color.white)
@@ -33,10 +35,10 @@ struct RPSendDesignView: View {
                 
                 // Message
                 HStack {
-                    Text(model.msg)
+                    TextField("Say something...", text: $message)
                         .lineLimit(1)
                         .multilineTextAlignment(.leading)
-                        .foregroundColor(Color(hex: "B5B5B5"))
+                        .foregroundColor(Color(hex: "161616"))
                     
                     Spacer()
                 }
@@ -50,17 +52,28 @@ struct RPSendDesignView: View {
             
             GeometryReader { geo in
                 VStack(alignment: .center, spacing: 20) {
-                    Text("¥ ")
-                        .font(.system(size: 30, weight: .semibold))
-                        .foregroundColor(Color(hex: "171717"))
-                    
-                    +
-                    
-                    Text(model.amount.isEmpty ? "0.00" : model.amount)
-                        .font(.system(size: 60, weight: .semibold))
-                        .foregroundColor(Color(hex: "171717"))
+                    Group {
+                        Text("¥ ")
+                            .font(.system(size: 30, weight: .semibold))
+                        
+                        +
+                        
+                        Text(amount.isEmpty ? "0.00" : amount)
+                            .font(.system(size: 60, weight: .semibold))
+                    }
+                    .lineLimit(1)
+                    .foregroundColor(Color(hex: "171717"))
                     
                     Button {
+                        service.myRedPacketModel = .init(
+                            isMine: true,
+                            senderName: service.yourNickName,
+                            senderAvatar: "🧑🏻‍💻",
+                            msg: message,
+                            amount: amount,
+                            receiverName: "Lisa",
+                            receiverAvatar: "👱🏻‍♀️"
+                        )
                         showSend = false
                     } label: {
                         Text("Send")

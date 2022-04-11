@@ -9,7 +9,6 @@ import SwiftUI
 struct ChatBottomView: View {
     @Binding var isOpened: Bool
     
-    var model: RedPackageModel
     var playMode: RPPlayMode
     
     var body: some View {
@@ -24,7 +23,7 @@ struct ChatBottomView: View {
                         Text(
                             !isOpened
                                 ? "🧧"
-                                : "Red Packet is opened by \(model.receiverName) 🥳 You can tap the Red Packet above to see the details ☝🏻"
+                                : "Red Packet is opened by Lisa! 🥳 You can tap the Red Packet above to see the details ☝🏻"
                         )
                         .font(.system(size: 20))
                         .multilineTextAlignment(.center)
@@ -46,7 +45,7 @@ struct ChatBottomView: View {
                         Text(
                             !isOpened
                                 ? "Tap the Red Packet above and open it! ☝🏻"
-                                : "You've opened \(model.receiverName)'s Red Packet! 🥳 \nYou can tap the Red Packet above to see the details ☝🏻"
+                                : "You've opened Alex's Red Packet! 🥳 \nYou can tap the Red Packet above to see the details ☝🏻"
                         )
                         .font(.system(size: 20))
                         .multilineTextAlignment(.center)

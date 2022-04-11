@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct RedPackageModel {
+public struct RedPacketModel {
     
     public init(
         isMine: Bool,

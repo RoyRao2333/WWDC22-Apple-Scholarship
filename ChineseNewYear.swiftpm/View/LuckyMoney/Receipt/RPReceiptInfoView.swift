@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct RPReceiptInfoView: View {
-    var model: RedPackageModel
+    var model: RedPacketModel
     
     var body: some View {
         GeometryReader { geo in

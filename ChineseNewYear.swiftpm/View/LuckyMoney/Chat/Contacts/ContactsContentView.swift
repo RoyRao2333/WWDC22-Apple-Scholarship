@@ -13,21 +13,13 @@ struct ContactsContentView: View {
     var body: some View {
         List {
             NavigationLink {
-                ReceiveChatView(model: RedPackageModel(
-                    isMine: false,
-                    senderName: "Alex",
-                    senderAvatar: "👱🏻",
-                    msg: "Best Wishes to you, \(service.yourNickName)! Without your help, I couldn't have won the scholarship. You are my best buddy, happy New Year!",
-                    amount: "500",
-                    receiverName: service.yourNickName,
-                    receiverAvatar: "🧑🏻‍💻"
-                ))
+                ReceiveChatView()
             } label: {
                 ContactsListRowView(avatar: "👱🏻", name: "Alex")
             }
             
             NavigationLink {
-                Text("Hello World.")
+                SendChatView()
             } label: {
                 ContactsListRowView(avatar: "👱🏻‍♀️", name: "Lisa")
             }

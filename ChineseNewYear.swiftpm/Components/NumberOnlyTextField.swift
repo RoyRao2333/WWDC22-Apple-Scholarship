@@ -19,6 +19,10 @@ struct NumberOnlyTextField: ViewModifier {
                 if newValue.last == "." && periodCount > 1 || newValue.last == "," && commaCount > 1 {
                     //it's a second period or comma, remove it
                     text = String(newValue.dropLast())
+                    // as bonus for the user, add haptic effect
+                    let generator = UINotificationFeedbackGenerator()
+                    generator.prepare()
+                    generator.notificationOccurred(.warning)
                 } else {
                     let filtered = newValue.filter { "0123456789.,".contains($0) }
                     if filtered != newValue {
