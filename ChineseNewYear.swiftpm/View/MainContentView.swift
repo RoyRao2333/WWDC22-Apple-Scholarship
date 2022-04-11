@@ -6,15 +6,7 @@ struct MainContentView: View {
         NavigationView {
             List {
                 NavigationLink {
-                    ReceiveChatView(model: RedPackageModel(
-                        isMine: false,
-                        senderName: "Alex",
-                        senderAvatar: "👱🏻",
-                        msg: "How is it going, \("Roy")? Without your help, I couldn't have won the scholarship. You are my best buddy, happy New Year!",
-                        amount: "500",
-                        receiverName: "Roy",
-                        receiverAvatar: "🧑🏻‍💻"
-                    ))
+                    ContactsContentView()
                 } label: {
                     Label("Lucky Money", systemImage: "1.square")
                 }

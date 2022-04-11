@@ -39,6 +39,5 @@ public struct ReceiveChatView: View {
                 RPReceiveContentView(model: model, showReceive: $showReceive, isOpened: $isOpened)
             }
         }
-//        .navigationBarHidden(true)
     }
 }

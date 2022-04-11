@@ -47,6 +47,9 @@ struct ChatListView: View {
                         model: model,
                         playMode: playMode
                     )
+                    
+                    ChatCellView(model: ChatModel(isMine: true, msg: "That's very kind of you, Alex! Best buddy forever!", avatar: "🧑🏻‍💻", name: service.yourNickName))
+                        .isHidden(!isOpened || showReceive)
             }
         }
         .padding(.horizontal, 15)
