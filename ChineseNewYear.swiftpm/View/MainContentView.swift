@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MainContentView: View {
+    @State private var orientation: UIDeviceOrientation = .unknown
     
     var body: some View {
         NavigationView {
@@ -8,13 +9,13 @@ struct MainContentView: View {
                 NavigationLink {
                     ContactsContentView()
                 } label: {
-                    Label("Lucky Money", systemImage: "1.square")
+                    Label("Chats", systemImage: "1.square")
                 }
                 
                 NavigationLink {
                     
                 } label: {
-                    Label("Reunion Dinnder", systemImage: "2.square")
+                    Label("Recipes", systemImage: "2.square")
                 }
                 
                 NavigationLink {
@@ -28,6 +29,19 @@ struct MainContentView: View {
             
             Text("Choose a chapter from Chapters menu!")
                 .font(.title)
+        }
+        .onRotate { ori in
+            orientation = ori
+        }
+        .overlay {
+            if orientation == .landscapeLeft || orientation == .landscapeRight {
+                Text("Please rotate your iPad to portrait mode in order to have a better experience.")
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .padding(.horizontal, 20)
+                    .background(Color.white)
+            }
         }
     }
 }
