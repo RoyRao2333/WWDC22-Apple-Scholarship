@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainContentView: View {
     @State private var orientation: UIDeviceOrientation = .unknown
+    @State private var introText: AttributedString?
     
     var body: some View {
         NavigationView {
@@ -27,8 +28,27 @@ struct MainContentView: View {
             .listStyle(SidebarListStyle())
             .navigationTitle("Chapters")
             
-            Text("Choose a chapter from Chapters menu!")
-                .font(.title)
+            Group {
+                if let introText = introText {
+                    Text(introText)
+                } else {
+                    Text("Error displaying intro.")
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .padding(.horizontal)
+        }
+        .onAppear {
+            if
+                let introUrl = Bundle.main.url(forResource: "intro", withExtension: "rtf", subdirectory: "Docs"),
+                let nsAttr = try? NSAttributedString(
+                    url: introUrl,
+                    options: [.documentType: NSAttributedString.DocumentType.rtf],
+                    documentAttributes: nil
+                )
+            {
+                introText = try? AttributedString(nsAttr, including: \.uiKit)
+            }
         }
         .onRotate { ori in
             orientation = ori

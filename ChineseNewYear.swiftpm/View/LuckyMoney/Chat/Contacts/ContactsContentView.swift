@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContactsContentView: View {
     @ObservedObject private var service: RPService = .shared
+    @State private var introText: AttributedString?
+    @State private var showIntro: Bool = true
     
     var body: some View {
         List {
@@ -25,8 +27,32 @@ struct ContactsContentView: View {
             }
         }
         .listStyle(.plain)
-        .navigationTitle("Chats")
+        .navigationTitle(showIntro ? "" : "Chats")
         .navigationBarTitleDisplayMode(.large)
+        .overlay {
+            Group {
+                if let introText = introText {
+                    Text(introText)
+                } else {
+                    Text("Error displaying intro.")
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .background(Color.white)
+            .padding(.horizontal)
+        }
+        .onAppear {
+            if
+                let introUrl = Bundle.main.url(forResource: "chats", withExtension: "rtf", subdirectory: "Docs"),
+                let nsAttr = try? NSAttributedString(
+                    url: introUrl,
+                    options: [.documentType: NSAttributedString.DocumentType.rtf],
+                    documentAttributes: nil
+                )
+            {
+                introText = try? AttributedString(nsAttr, including: \.uiKit)
+            }
+        }
     }
 }
 
