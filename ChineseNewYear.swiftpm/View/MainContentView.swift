@@ -39,15 +39,18 @@ struct MainContentView: View {
                             .opacity(0.3)
                     }
                     
-                    if let introText = introText {
-                        Text(introText)
-                    } else {
-                        Text("Error displaying intro.")
+                    Group {
+                        if let introText = introText {
+                            Text(introText)
+                        } else {
+                            Text("Error displaying intro.")
+                        }
                     }
+                    .foregroundColor(.white)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .padding()
             }
+            .background(Color.white)
         }
         .onAppear {
             if

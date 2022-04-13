@@ -30,26 +30,41 @@ struct ContactsContentView: View {
         .navigationTitle(showIntro ? "" : "Chats")
         .navigationBarTitleDisplayMode(.large)
         .overlay {
-            ScrollView {
-                ZStack {
-                    GeometryReader { geo in
-                        Image("chinese_knot")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: geo.size.width, height: geo.size.height)
-                            .position(x: geo.size.width / 4 * 3, y: geo.size.height / 6)
-                            .opacity(0.3)
+            if showIntro {
+                ScrollView {
+                    ZStack {
+                        GeometryReader { geo in
+                            Image("chinese_knot")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: geo.size.width, height: geo.size.height)
+                                .position(x: geo.size.width / 4 * 3, y: geo.size.height / 6)
+                                .opacity(0.3)
+                        }
+                        
+                        VStack(spacing: 50) {
+                            Group {
+                                if let introText = introText {
+                                    Text(introText)
+                                } else {
+                                    Text("Error displaying intro.")
+                                }
+                            }
+                            .foregroundColor(.black)
+                            
+                            Button {
+                                withAnimation {
+                                    showIntro = false
+                                }
+                            } label: {
+                                Text("Continue")
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
                     }
-                    
-                    if let introText = introText {
-                        Text(introText)
-                    } else {
-                        Text("Error displaying intro.")
-                    }
+                    .padding()
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .background(Color.white)
-                .padding()
             }
         }
         .onAppear {
