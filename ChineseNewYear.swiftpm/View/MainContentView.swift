@@ -28,15 +28,26 @@ struct MainContentView: View {
             .listStyle(SidebarListStyle())
             .navigationTitle("Chapters")
             
-            Group {
-                if let introText = introText {
-                    Text(introText)
-                } else {
-                    Text("Error displaying intro.")
+            ScrollView {
+                ZStack {
+                    GeometryReader { geo in
+                        Image("chinese_knot")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: geo.size.width, height: geo.size.height)
+                            .position(x: geo.size.width / 4 * 3, y: geo.size.height / 6)
+                            .opacity(0.3)
+                    }
+                    
+                    if let introText = introText {
+                        Text(introText)
+                    } else {
+                        Text("Error displaying intro.")
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .padding()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .padding(.horizontal)
         }
         .onAppear {
             if
