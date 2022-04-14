@@ -13,23 +13,7 @@ struct ContactsContentView: View {
     @State private var showIntro: Bool = true
     
     var body: some View {
-        List {
-            NavigationLink {
-                ReceiveChatView()
-            } label: {
-                ContactsListRowView(avatar: "👱🏻", name: "Alex")
-            }
-            
-            NavigationLink {
-                SendChatView()
-            } label: {
-                ContactsListRowView(avatar: "👱🏻‍♀️", name: "Lisa")
-            }
-        }
-        .listStyle(.plain)
-        .navigationTitle(showIntro ? "" : "Chats")
-        .navigationBarTitleDisplayMode(.large)
-        .overlay {
+        ZStack {
             if showIntro {
                 ScrollView {
                     ZStack {
@@ -65,8 +49,25 @@ struct ContactsContentView: View {
                     .padding()
                 }
                 .background(Color.white)
+            } else {
+                List {
+                    NavigationLink {
+                        ReceiveChatView()
+                    } label: {
+                        ContactsListRowView(avatar: "👱🏻", name: "Alex")
+                    }
+                    
+                    NavigationLink {
+                        SendChatView()
+                    } label: {
+                        ContactsListRowView(avatar: "👱🏻‍♀️", name: "Lisa")
+                    }
+                }
+                .listStyle(.plain)
             }
         }
+        .navigationTitle(showIntro ? "" : "Chats")
+        .navigationBarTitleDisplayMode(.large)
         .onAppear {
             if
                 let introUrl = Bundle.main.url(forResource: "chats", withExtension: "rtf", subdirectory: "Docs"),
