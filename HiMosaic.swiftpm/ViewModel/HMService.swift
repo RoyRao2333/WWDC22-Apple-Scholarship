@@ -52,11 +52,12 @@ extension HMService {
             error == nil
         else { return }
         
-        let items = observations.map {
-            TextItem(
-                text: $0.topCandidates(1).first?.string,
-                normalizedRect: observation2Rect(obs: $0),
-                type: .name
+        let items = observations.map { obs -> TextItem in
+            let result = processObservation(obs: obs)
+            return TextItem(
+                text: obs.topCandidates(1).first?.string,
+                normalizedRect: result.rect,
+                type: result.type
             )
         }
         
@@ -65,15 +66,24 @@ extension HMService {
         }
     }
     
-    private func observation2Rect(obs: VNRecognizedTextObservation) -> CGRect {
-        guard let candidate = obs.topCandidates(1).first else { return .zero }
+    private func processObservation(obs: VNRecognizedTextObservation) -> (type: RegexPattern?, rect: CGRect) {
+        guard let candidate = obs.topCandidates(1).first else { return (nil, .zero) }
         
-        let stringRange = candidate.string.startIndex ..< candidate.string.endIndex
+        var stringRange = candidate.string.startIndex ..< candidate.string.endIndex
+        var stringType: RegexPattern?
+        for pattern in RegexPattern.allCases {
+            if let range = candidate.string.range(of: pattern.rawValue, options: .regularExpression) {
+                stringRange = range
+                stringType = pattern
+                break
+            }
+        }
+        
         let boxObs = try? candidate.boundingBox(for: stringRange)
         let boundingBox = boxObs?.boundingBox ?? .zero
         let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
         let rect = boundingBox.applying(bottomToTopTransform)
         
-        return rect
+        return (stringType, rect)
     }
 }

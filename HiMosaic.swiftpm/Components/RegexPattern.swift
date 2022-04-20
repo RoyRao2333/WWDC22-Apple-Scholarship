@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum RegexPattern: String {
+public enum RegexPattern: String, CaseIterable {
     case name = #"^[A-Z][a-z]*(([,.] |[ '-])[A-Za-z][a-z]*)*(\.?)( [IVXLCDM]+)?$"#
     case number = #"^((([0\u0660\u06F0]|([1-9\u0661-\u0669\u06F1-\u06F9][0\u0660\u06F0]*?)+)(\.)[0-9\u0660-\u0669\u06F0-\u06F9]+)|(([0\u0660\u06F0]?|([1-9\u0661-\u0669\u06F1-\u06F9][0\u0660\u06F0]*?)+))|\b)$"#
     case phoneNumber = #"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"#
