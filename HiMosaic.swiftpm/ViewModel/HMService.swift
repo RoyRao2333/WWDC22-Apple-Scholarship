@@ -26,6 +26,8 @@ extension HMService {
             let orientation = uiImage?.imageOrientation
         else { return }
         
+        if !textItems.isEmpty { textItems = [] }
+        
         let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .init(orientation))
         let textRequest = VNRecognizeTextRequest(completionHandler: onDetectedText)
         textRequest.recognitionLevel = .accurate
