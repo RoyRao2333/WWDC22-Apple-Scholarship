@@ -5,13 +5,19 @@
 //  Created by roy on 2022/4/18.
 //
 
-import Foundation
+import UIKit
 
-class TextItem: Identifiable {
+struct TextItem: Identifiable, HashableSynthesizable {
     let id = UUID().uuidString
-    var text: String
+    let text: String?
+    let normalizedRect: CGRect
+    let type: RegexPattern?
+    var validated: Bool
     
-    init(text: String) {
+    init(text: String?, normalizedRect: CGRect, type: RegexPattern? = nil, validated: Bool = false) {
         self.text = text
+        self.normalizedRect = normalizedRect
+        self.type = type
+        self.validated = validated
     }
 }

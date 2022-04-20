@@ -12,6 +12,7 @@ class HMService: ObservableObject {
     static let shared = HMService()
     
     @Published var textItems: [TextItem] = []
+    var presets: Set<RegexPattern> = []
     
     private init() {}
 }
@@ -26,8 +27,8 @@ extension HMService {
         else { return }
         
         let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .init(orientation))
-        let textRequest = VNDetectTextRectanglesRequest(completionHandler: onDetectedText)
-        textRequest.reportCharacterBoxes = true
+        let textRequest = VNRecognizeTextRequest(completionHandler: onDetectedText)
+        textRequest.recognitionLevel = .accurate
         
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let weakSelf = self else { return }
@@ -47,19 +48,32 @@ extension HMService {
     
     private func onDetectedText(request: VNRequest?, error: Error?) {
         guard
-            let observations = request?.results as? [VNTextObservation],
+            let observations = request?.results as? [VNRecognizedTextObservation],
             error == nil
         else { return }
         
-//        let items = observations.compactMap { obs -> TextItem? in
-//
-//            if let str = obs.topCandidates(1).first?.string {
-//                return TextItem(text: str)
-//            }
-//            return nil
-//        }
-        print("Observations are \(observations)")
+        let items = observations.map {
+            TextItem(
+                text: $0.topCandidates(1).first?.string,
+                normalizedRect: observation2Rect(obs: $0),
+                type: .name
+            )
+        }
         
-//        textItems = items
+        DispatchQueue.main.async { [weak self] in
+            self?.textItems = items
+        }
+    }
+    
+    private func observation2Rect(obs: VNRecognizedTextObservation) -> CGRect {
+        guard let candidate = obs.topCandidates(1).first else { return .zero }
+        
+        let stringRange = candidate.string.startIndex ..< candidate.string.endIndex
+        let boxObs = try? candidate.boundingBox(for: stringRange)
+        let boundingBox = boxObs?.boundingBox ?? .zero
+        let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
+        let rect = boundingBox.applying(bottomToTopTransform)
+        
+        return rect
     }
 }
