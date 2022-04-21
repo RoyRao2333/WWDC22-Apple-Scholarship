@@ -10,15 +10,17 @@ import Vision
 
 struct MosaicOperationView: View {
     @ObservedObject private var service: HMService = .shared
+    @State private var bAllText = false
     @State private var bName = false
     @State private var bNumber = false
     @State private var bPhoneNumber = false
     @State private var bEmail = false
     @State private var bUrl = false
     @State private var bCreditCardNumber = false
+    @State private var bPassportNumber = false
     
     var imageView: some View {
-        Image("fake_info")
+        Image("fake_form")
             .resizable()
             .scaledToFit()
             .overlay {
@@ -42,9 +44,18 @@ struct MosaicOperationView: View {
     var body: some View {
         ZStack {
             VStack {
+                Text("If the result provided below is not accurate, you can tap the texts on the image and manually put on mosaic.")
+                    .foregroundColor(.white)
+                    .padding(20)
+                    .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
+                
                 imageView
                 
                 VStack(alignment: .leading, spacing: 10) {
+                    Toggle("All Text", isOn: $bAllText)
+                        .toggleStyle(CheckboxToggleStyle(style: .square))
+                        .foregroundColor(.blue)
+                    
                     Toggle("Names", isOn: $bName)
                         .toggleStyle(CheckboxToggleStyle(style: .square))
                         .foregroundColor(.blue)
@@ -66,6 +77,10 @@ struct MosaicOperationView: View {
                         .foregroundColor(.blue)
                     
                     Toggle("Credit Card Numbers", isOn: $bCreditCardNumber)
+                        .toggleStyle(CheckboxToggleStyle(style: .square))
+                        .foregroundColor(.blue)
+                    
+                    Toggle("Passport Numbers", isOn: $bPassportNumber)
                         .toggleStyle(CheckboxToggleStyle(style: .square))
                         .foregroundColor(.blue)
                 }
@@ -103,7 +118,12 @@ struct MosaicOperationView: View {
         .navigationTitle("Workspace")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
-            service.recognizeText(in: UIImage(named: "fake_info"))
+            service.recognizeText(in: UIImage(named: "fake_form"))
+        }
+        .onChange(of: bAllText) { newValue in
+            $service.textItems.forEach { $item in
+                item.validated = newValue
+            }
         }
         .onChange(of: bName) { newValue in
             $service.textItems.filter { $item in
@@ -143,6 +163,13 @@ struct MosaicOperationView: View {
         .onChange(of: bCreditCardNumber) { newValue in
             $service.textItems.filter { $item in
                 item.types.contains(RegexPattern.creditCardNumber)
+            }.forEach { $item in
+                item.validated = newValue
+            }
+        }
+        .onChange(of: bPassportNumber) { newValue in
+            $service.textItems.filter { $item in
+                item.types.contains(RegexPattern.passportNumber)
             }.forEach { $item in
                 item.validated = newValue
             }
