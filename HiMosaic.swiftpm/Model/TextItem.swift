@@ -11,13 +11,13 @@ struct TextItem: Identifiable, HashableSynthesizable {
     let id = UUID().uuidString
     let text: String?
     let normalizedRect: CGRect
-    let type: RegexPattern?
+    let types: [RegexPattern]
     var validated: Bool
     
-    init(text: String?, normalizedRect: CGRect, type: RegexPattern? = nil, validated: Bool = false) {
+    init(text: String?, normalizedRect: CGRect, types: [RegexPattern] = [], validated: Bool = false) {
         self.text = text
         self.normalizedRect = normalizedRect
-        self.type = type
+        self.types = types
         self.validated = validated
     }
 }

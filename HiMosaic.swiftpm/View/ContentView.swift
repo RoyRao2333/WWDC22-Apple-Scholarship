@@ -9,7 +9,7 @@ struct ContentView: View {
                     MosaicOperationView()
                 } label: {
                     HStack {
-                        Image(systemName: "photo.fill")
+                        Image(systemName: "photo")
                         
                         Text("Select a sample")
                     }
@@ -24,7 +24,7 @@ struct ContentView: View {
                     
                 } label: {
                     HStack {
-                        Image(systemName: "photo.fill.on.rectangle.fill")
+                        Image(systemName: "photo.on.rectangle.angled")
                         
                         Text("Choose from Photo Library")
                     }

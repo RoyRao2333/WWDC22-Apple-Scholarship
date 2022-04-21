@@ -81,42 +81,42 @@ struct MosaicOperationView: View {
         }
         .onChange(of: bName) { newValue in
             $service.textItems.filter { $item in
-                item.type == RegexPattern.name
+                item.types.contains(RegexPattern.name)
             }.forEach { $item in
                 item.validated = newValue
             }
         }
         .onChange(of: bNumber) { newValue in
             $service.textItems.filter { $item in
-                item.type == RegexPattern.number
+                item.types.contains(RegexPattern.number)
             }.forEach { $item in
                 item.validated = newValue
             }
         }
         .onChange(of: bPhoneNumber) { newValue in
             $service.textItems.filter { $item in
-                item.type == RegexPattern.phoneNumber
+                item.types.contains(RegexPattern.phoneNumber)
             }.forEach { $item in
                 item.validated = newValue
             }
         }
         .onChange(of: bEmail) { newValue in
             $service.textItems.filter { $item in
-                item.type == RegexPattern.email
+                item.types.contains(RegexPattern.email)
             }.forEach { $item in
                 item.validated = newValue
             }
         }
         .onChange(of: bUrl) { newValue in
             $service.textItems.filter { $item in
-                item.type == RegexPattern.url
+                item.types.contains(RegexPattern.url)
             }.forEach { $item in
                 item.validated = newValue
             }
         }
         .onChange(of: bCreditCardNumber) { newValue in
             $service.textItems.filter { $item in
-                item.type == RegexPattern.creditCardNumber
+                item.types.contains(RegexPattern.creditCardNumber)
             }.forEach { $item in
                 item.validated = newValue
             }

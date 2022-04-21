@@ -59,7 +59,7 @@ extension HMService {
             return TextItem(
                 text: obs.topCandidates(1).first?.string,
                 normalizedRect: result.rect,
-                type: result.type
+                types: result.types
             )
         }
         
@@ -68,16 +68,15 @@ extension HMService {
         }
     }
     
-    private func processObservation(obs: VNRecognizedTextObservation) -> (type: RegexPattern?, rect: CGRect) {
-        guard let candidate = obs.topCandidates(1).first else { return (nil, .zero) }
+    private func processObservation(obs: VNRecognizedTextObservation) -> (types: [RegexPattern], rect: CGRect) {
+        guard let candidate = obs.topCandidates(1).first else { return ([], .zero) }
         
         var stringRange = candidate.string.startIndex ..< candidate.string.endIndex
-        var stringType: RegexPattern?
+        var stringType: [RegexPattern] = []
         for pattern in RegexPattern.allCases {
             if let range = candidate.string.range(of: pattern.rawValue, options: .regularExpression) {
                 stringRange = range
-                stringType = pattern
-                break
+                stringType.append(pattern)
             }
         }
         
