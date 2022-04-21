@@ -1,6 +1,6 @@
 //
 //  HMService.swift
-//  
+//
 //
 //  Created by roy on 2022/4/18.
 //
@@ -8,18 +8,18 @@
 import UIKit
 import Vision
 
-class HMService: ObservableObject {
+class HMService: NSObject, ObservableObject {
     static let shared = HMService()
     
     @Published var textItems: [TextItem] = []
-    var presets: Set<RegexPattern> = []
+    @Published var alert: AlertInfo?
     
-    private init() {}
+    private override init() {}
 }
 
 // MARK: Shared Methods -
+
 extension HMService {
-    
     func recognizeText(in uiImage: UIImage?) {
         guard
             let cgImage = uiImage?.cgImage,
@@ -43,11 +43,27 @@ extension HMService {
             }
         }
     }
+    
+    @objc func saveImage(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            alert = .init(
+                id: .failure,
+                title: "Failed!",
+                message: "Save image to album failed with error: \(error.localizedDescription)"
+            )
+        } else {
+            alert = .init(
+                id: .success,
+                title: "Success!",
+                message: "Image saved to album."
+            )
+        }
+    }
 }
 
 // MARK: Private Methods -
+
 extension HMService {
-    
     private func onDetectedText(request: VNRequest?, error: Error?) {
         guard
             let observations = request?.results as? [VNRecognizedTextObservation],

@@ -17,28 +17,32 @@ struct MosaicOperationView: View {
     @State private var bUrl = false
     @State private var bCreditCardNumber = false
     
+    var imageView: some View {
+        Image("fake_info")
+            .resizable()
+            .scaledToFit()
+            .overlay {
+                GeometryReader { geo in
+                    ForEach($service.textItems, id: \.self) { $item in
+                        Rectangle()
+                            .path(in: VNImageRectForNormalizedRect(
+                                item.normalizedRect,
+                                Int(geo.size.width),
+                                Int(geo.size.height)
+                            ))
+                            .fill(item.validated ? Color.gray : .black.opacity(0.0001))
+                            .onTapGesture {
+                                item.validated.toggle()
+                            }
+                    }
+                }
+            }
+    }
+    
     var body: some View {
         ZStack {
             VStack {
-                Image("fake_info")
-                    .resizable()
-                    .scaledToFit()
-                    .overlay {
-                        GeometryReader { geo in
-                            ForEach($service.textItems, id: \.self) { $item in
-                                Rectangle()
-                                    .path(in: VNImageRectForNormalizedRect(
-                                        item.normalizedRect,
-                                        Int(geo.size.width),
-                                        Int(geo.size.height)
-                                    ))
-                                    .fill(item.validated ? Color.gray : .black.opacity(0.0001))
-                                    .onTapGesture {
-                                        item.validated.toggle()
-                                    }
-                            }
-                        }
-                    }
+                imageView
                 
                 VStack(alignment: .leading, spacing: 10) {
                     Toggle("Names", isOn: $bName)
@@ -65,6 +69,28 @@ struct MosaicOperationView: View {
                         .toggleStyle(CheckboxToggleStyle(style: .square))
                         .foregroundColor(.blue)
                 }
+                
+                Spacer()
+                
+                Button(action: exportImage) {
+                    HStack {
+                        Image(systemName: "tray.and.arrow.down")
+                        
+                        Text("Save to Photo Library")
+                    }
+                    .padding(20)
+                    .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
+                }
+                .alert(item: $service.alert) {
+                    Alert(
+                        title: Text($0.title),
+                        message: Text($0.message),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
+                
+                Spacer()
+                    .frame(height: 50)
             }
             
             if service.textItems.isEmpty {
@@ -121,6 +147,15 @@ struct MosaicOperationView: View {
                 item.validated = newValue
             }
         }
+    }
+    
+    private func exportImage() {
+        UIImageWriteToSavedPhotosAlbum(
+            imageView.snapshot(),
+            service,
+            #selector(service.saveImage),
+            nil
+        )
     }
 }
 
