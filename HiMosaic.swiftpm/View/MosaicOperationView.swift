@@ -18,9 +18,10 @@ struct MosaicOperationView: View {
     @State private var bUrl = false
     @State private var bCreditCardNumber = false
     @State private var bPassportNumber = false
+    @Binding var image: UIImage?
     
     var imageView: some View {
-        Image("fake_form")
+        Image(uiImage: image ?? UIImage())
             .resizable()
             .scaledToFit()
             .overlay {
@@ -45,6 +46,7 @@ struct MosaicOperationView: View {
         ZStack {
             VStack {
                 Text("If the result provided below is not accurate, you can tap the texts on the image and manually put on mosaic.")
+                    .multilineTextAlignment(.center                             )
                     .foregroundColor(.white)
                     .padding(20)
                     .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
@@ -118,7 +120,10 @@ struct MosaicOperationView: View {
         .navigationTitle("Workspace")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
-            service.recognizeText(in: UIImage(named: "fake_form"))
+            service.recognizeText(in: image)
+        }
+        .onDisappear {
+            image = nil
         }
         .onChange(of: bAllText) { newValue in
             $service.textItems.forEach { $item in
@@ -183,11 +188,5 @@ struct MosaicOperationView: View {
             #selector(service.saveImage),
             nil
         )
-    }
-}
-
-struct SwiftUIView_Previews: PreviewProvider {
-    static var previews: some View {
-        MosaicOperationView()
     }
 }
