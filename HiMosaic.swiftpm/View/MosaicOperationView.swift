@@ -45,7 +45,7 @@ struct MosaicOperationView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text("If the result provided below is not accurate, you can tap the texts on the image and manually put on mosaic.")
+                Text("If the result provided below is not accurate, you can always tap the texts on the image and manually put on mosaic.")
                     .multilineTextAlignment(.center                             )
                     .foregroundColor(.white)
                     .padding(20)
@@ -90,13 +90,9 @@ struct MosaicOperationView: View {
                 Spacer()
                 
                 Button(action: exportImage) {
-                    HStack {
-                        Image(systemName: "tray.and.arrow.down")
-                        
-                        Text("Save to Photo Library")
-                    }
-                    .padding(20)
-                    .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
+                    Label("Save to Photo Library", systemImage: "tray.and.arrow.down")
+                        .padding(20)
+                        .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
                 }
                 .alert(item: $service.alert) {
                     Alert(

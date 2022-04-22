@@ -8,16 +8,28 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Button {
-                    selectedImage = .init(named: "fake_info")
-                } label: {
-                    HStack {
-                        Image(systemName: "photo")
-                        
-                        Text("Select a sample")
+                Menu {
+                    Button {
+                        selectedImage = .init(named: "fake_info1")
+                    } label: {
+                        Label("Fake Info", systemImage: "person.circle")
                     }
-                    .padding(20)
-                    .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
+                    
+                    Button {
+                        selectedImage = .init(named: "fake_passport")
+                    } label: {
+                        Label("Fake Passport", systemImage: "person.text.rectangle")
+                    }
+                    
+                    Button {
+                        selectedImage = .init(named: "fake_form")
+                    } label: {
+                        Label("Fake Form", systemImage: "doc.richtext")
+                    }
+                } label: {
+                    Label("Select a sample", systemImage: "photo")
+                        .padding(20)
+                        .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
                 }
                 
                 Divider()
@@ -28,13 +40,9 @@ struct ContentView: View {
                         showPicker = true
                     }
                 } label: {
-                    HStack {
-                        Image(systemName: "photo.on.rectangle.angled")
-                        
-                        Text("Choose from Photo Library")
-                    }
-                    .padding(20)
-                    .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
+                    Label("Choose from Photo Library", systemImage: "photo.on.rectangle.angled")
+                        .padding(20)
+                        .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
                 }
                 .sheet(isPresented: $showPicker) {
                     PhotoPicker(image: $selectedImage)
