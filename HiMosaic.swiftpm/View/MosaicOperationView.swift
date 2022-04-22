@@ -27,6 +27,19 @@ struct MosaicOperationView: View {
             .overlay {
                 GeometryReader { geo in
                     ForEach($service.textItems, id: \.self) { $item in
+//                        let frame = VNImageRectForNormalizedRect(
+//                            item.normalizedRect,
+//                            Int(geo.size.width),
+//                            Int(geo.size.height)
+//                        )
+//
+//                        Text(item.text ?? "N/A")
+//                            .foregroundColor(.red)
+//                            .position(x: frame.midX, y: frame.origin.y)
+//                            .onTapGesture {
+//                                item.validated.toggle()
+//                            }
+                        
                         Rectangle()
                             .path(in: VNImageRectForNormalizedRect(
                                 item.normalizedRect,
@@ -50,6 +63,7 @@ struct MosaicOperationView: View {
                     .foregroundColor(.white)
                     .padding(20)
                     .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
+                    .padding()
                 
                 imageView
                 

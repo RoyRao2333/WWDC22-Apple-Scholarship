@@ -10,7 +10,7 @@ struct ContentView: View {
             VStack(spacing: 20) {
                 Menu {
                     Button {
-                        selectedImage = .init(named: "fake_info1")
+                        selectedImage = .init(named: "fake_info")
                     } label: {
                         Label("Fake Info", systemImage: "person.circle")
                     }
