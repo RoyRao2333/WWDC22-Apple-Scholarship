@@ -11,8 +11,15 @@ import Vision
 class HMService: NSObject, ObservableObject {
     static let shared = HMService()
     
-    @Published var textItems: [TextItem] = []
     @Published var alert: AlertInfo?
+    @Published private(set) var rawTextItems: [TextItem] = []
+    @Published private(set) var nameItems: [TextItem] = []
+    @Published private(set) var numberItems: [TextItem] = []
+    @Published private(set) var phoneNumberItems: [TextItem] = []
+    @Published private(set) var emailItems: [TextItem] = []
+    @Published private(set) var urlItems: [TextItem] = []
+    @Published private(set) var creditCardNumberItems: [TextItem] = []
+    @Published private(set) var passportNumberItems: [TextItem] = []
     
     private override init() {}
 }
@@ -26,19 +33,14 @@ extension HMService {
             let orientation = uiImage?.imageOrientation
         else { return }
         
-        if !textItems.isEmpty { textItems = [] }
-        
         let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .init(orientation))
         let textRequest = VNRecognizeTextRequest(completionHandler: onDetectedText)
         textRequest.recognitionLevel = .accurate
         
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let weakSelf = self else { return }
-            
+        DispatchQueue.global(qos: .userInitiated).async {
             do {
                 try handler.perform([textRequest])
             } catch {
-                weakSelf.textItems = []
                 print("DEBUG: Recognizing text failed with error: \(error)")
             }
         }
@@ -64,43 +66,53 @@ extension HMService {
 // MARK: Private Methods -
 
 extension HMService {
+    
     private func onDetectedText(request: VNRequest?, error: Error?) {
         guard
             let observations = request?.results as? [VNRecognizedTextObservation],
             error == nil
         else { return }
         
-        let items = observations.map { obs -> TextItem in
-            let result = processObservation(obs: obs)
-            return TextItem(
-                text: obs.topCandidates(1).first?.string,
-                normalizedRect: result.rect,
-                types: result.types
-            )
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.textItems = items
+        observations.forEach { obs in
+            DispatchQueue.main.async { [weak self] in
+                self?.processObservation(obs: obs)
+            }
         }
     }
     
-    private func processObservation(obs: VNRecognizedTextObservation) -> (types: [RegexPattern], rect: CGRect) {
-        guard let candidate = obs.topCandidates(1).first else { return ([], .zero) }
+    private func processObservation(obs: VNRecognizedTextObservation) {
+        guard let candidate = obs.topCandidates(1).first else { return }
         
-        var stringRange = candidate.string.startIndex ..< candidate.string.endIndex
-        var stringType: [RegexPattern] = []
+        let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
+        let fullRange = candidate.string.startIndex ..< candidate.string.endIndex
+        let rawBox = (try? candidate.boundingBox(for: fullRange)?.boundingBox) ?? .zero
+        let rawRect = rawBox.applying(bottomToTopTransform)
+        let rawItem = TextItem(text: candidate.string, normalizedRect: rawRect)
+        rawTextItems.append(rawItem)
+        
         for pattern in RegexPattern.allCases {
             if let range = candidate.string.range(of: pattern.rawValue, options: .regularExpression) {
-                stringRange = range
-                stringType.append(pattern)
+                let matchedBox = (try? candidate.boundingBox(for: range)?.boundingBox) ?? .zero
+                let matchedRect = matchedBox.applying(bottomToTopTransform)
+                let matchedItem = TextItem(text: String(candidate.string[range]), normalizedRect: matchedRect)
+                
+                switch pattern {
+                    case .name:
+                        nameItems.append(matchedItem)
+                    case .number:
+                        numberItems.append(matchedItem)
+                    case .phoneNumber:
+                        phoneNumberItems.append(matchedItem)
+                    case .email:
+                        emailItems.append(matchedItem)
+                    case .url:
+                        urlItems.append(matchedItem)
+                    case .creditCardNumber:
+                        creditCardNumberItems.append(matchedItem)
+                    case .passportNumber:
+                        passportNumberItems.append(matchedItem)
+                }
             }
         }
-        
-        let boxObs = try? candidate.boundingBox(for: stringRange)
-        let boundingBox = boxObs?.boundingBox ?? .zero
-        let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
-        let rect = boundingBox.applying(bottomToTopTransform)
-        
-        return (stringType, rect)
     }
 }

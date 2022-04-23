@@ -18,6 +18,8 @@ struct MosaicOperationView: View {
     @State private var bUrl = false
     @State private var bCreditCardNumber = false
     @State private var bPassportNumber = false
+    @State private var selectedItems: Set<TextItem> = []
+    
     @Binding var image: UIImage?
     
     var imageView: some View {
@@ -26,29 +28,37 @@ struct MosaicOperationView: View {
             .scaledToFit()
             .overlay {
                 GeometryReader { geo in
-                    ForEach($service.textItems, id: \.self) { $item in
-//                        let frame = VNImageRectForNormalizedRect(
-//                            item.normalizedRect,
-//                            Int(geo.size.width),
-//                            Int(geo.size.height)
-//                        )
+                    ForEach(service.rawTextItems, id: \.self) { item in
+                        let frame = VNImageRectForNormalizedRect(
+                            item.normalizedRect,
+                            Int(geo.size.width),
+                            Int(geo.size.height)
+                        )
 //
 //                        Text(item.text ?? "N/A")
 //                            .foregroundColor(.red)
 //                            .position(x: frame.midX, y: frame.origin.y)
-//                            .onTapGesture {
-//                                item.validated.toggle()
-//                            }
                         
                         Rectangle()
-                            .path(in: VNImageRectForNormalizedRect(
-                                item.normalizedRect,
-                                Int(geo.size.width),
-                                Int(geo.size.height)
-                            ))
-                            .fill(item.validated ? Color.gray : .black.opacity(0.0001))
+                            .path(in: frame)
+                            .fill(Color.black.opacity(0.0001))
                             .onTapGesture {
-                                item.validated.toggle()
+                                selectedItems.insert(item)
+                            }
+                    }
+                    
+                    ForEach(Array(selectedItems), id: \.self) { item in
+                        let frame = VNImageRectForNormalizedRect(
+                            item.normalizedRect,
+                            Int(geo.size.width),
+                            Int(geo.size.height)
+                        )
+                        
+                        Rectangle()
+                            .path(in: frame)
+                            .fill(Color.gray)
+                            .onTapGesture {
+                                selectedItems.remove(item)
                             }
                     }
                 }
@@ -57,7 +67,7 @@ struct MosaicOperationView: View {
     
     var body: some View {
         ZStack {
-            VStack {
+            VStack(spacing: 20) {
                 Text("If the result provided below is not accurate, you can always tap the texts on the image and manually put on mosaic.")
                     .multilineTextAlignment(.center                             )
                     .foregroundColor(.white)
@@ -120,7 +130,7 @@ struct MosaicOperationView: View {
                     .frame(height: 50)
             }
             
-            if service.textItems.isEmpty {
+            if service.rawTextItems.isEmpty {
                 ProgressView()
                     .progressViewStyle(.circular)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -136,57 +146,64 @@ struct MosaicOperationView: View {
             image = nil
         }
         .onChange(of: bAllText) { newValue in
-            $service.textItems.forEach { $item in
-                item.validated = newValue
+            selectedItems = newValue ? Set(service.rawTextItems) : []
+            if !newValue {
+                bName = false
+                bNumber = false
+                bPhoneNumber = false
+                bEmail = false
+                bUrl = false
+                bCreditCardNumber = false
+                bPassportNumber = false
             }
         }
         .onChange(of: bName) { newValue in
-            $service.textItems.filter { $item in
-                item.types.contains(RegexPattern.name)
-            }.forEach { $item in
-                item.validated = newValue
+            if newValue {
+                selectedItems = selectedItems.union(service.nameItems)
+            } else {
+                service.nameItems.forEach { selectedItems.remove($0) }
             }
         }
         .onChange(of: bNumber) { newValue in
-            $service.textItems.filter { $item in
-                item.types.contains(RegexPattern.number)
-            }.forEach { $item in
-                item.validated = newValue
+            if newValue {
+                selectedItems = selectedItems.union(service.numberItems)
+            } else {
+                service.numberItems.forEach { selectedItems.remove($0) }
             }
         }
         .onChange(of: bPhoneNumber) { newValue in
-            $service.textItems.filter { $item in
-                item.types.contains(RegexPattern.phoneNumber)
-            }.forEach { $item in
-                item.validated = newValue
+            if newValue {
+                selectedItems = selectedItems.union(service.phoneNumberItems)
+            } else {
+                service.phoneNumberItems.forEach { selectedItems.remove($0) }
             }
         }
         .onChange(of: bEmail) { newValue in
-            $service.textItems.filter { $item in
-                item.types.contains(RegexPattern.email)
-            }.forEach { $item in
-                item.validated = newValue
+            if newValue {
+                selectedItems = selectedItems.union(service.emailItems)
+            } else {
+                service.emailItems.forEach { selectedItems.remove($0) }
             }
         }
         .onChange(of: bUrl) { newValue in
-            $service.textItems.filter { $item in
-                item.types.contains(RegexPattern.url)
-            }.forEach { $item in
-                item.validated = newValue
+            if newValue {
+                selectedItems = selectedItems.union(service.urlItems)
+            } else {
+                service.urlItems.forEach { selectedItems.remove($0) }
             }
         }
         .onChange(of: bCreditCardNumber) { newValue in
-            $service.textItems.filter { $item in
-                item.types.contains(RegexPattern.creditCardNumber)
-            }.forEach { $item in
-                item.validated = newValue
+            if newValue {
+                selectedItems = selectedItems.union(service.creditCardNumberItems)
+            } else {
+                service.creditCardNumberItems.forEach { selectedItems.remove($0) }
             }
         }
         .onChange(of: bPassportNumber) { newValue in
-            $service.textItems.filter { $item in
-                item.types.contains(RegexPattern.passportNumber)
-            }.forEach { $item in
-                item.validated = newValue
+            if newValue {
+                selectedItems = selectedItems.union(service.passportNumberItems)
+            } else {
+                service.passportNumberItems.forEach { selectedItems.remove($0) }
             }
         }
     }
