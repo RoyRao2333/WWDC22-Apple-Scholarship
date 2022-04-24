@@ -58,18 +58,6 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 
-                HStack(alignment: .top) {
-                    Image(systemName: "face.smiling.fill")
-                    
-                    Text("If the result provided by auto detection is not accurate, you can always tap the texts on the image and manually put on mosaic.")
-                        .multilineTextAlignment(.center)
-                }
-                .foregroundColor(.white)
-                .padding(20)
-                .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                
                 if showWelcome {
                     WelcomeView(showWelcome: $showWelcome)
                         .transition(.move(edge: .bottom))

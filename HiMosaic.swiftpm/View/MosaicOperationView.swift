@@ -11,12 +11,12 @@ import Vision
 struct MosaicOperationView: View {
     @ObservedObject private var service: HMService = .shared
     @State private var bAllText = false
-    @State private var bName = false
     @State private var bNumber = false
     @State private var bPhoneNumber = false
     @State private var bEmail = false
     @State private var bUrl = false
     @State private var bCreditCardNumber = false
+    @State private var showDesc = true
     @State private var selectedItems: Set<TextItem> = []
     
     @Binding var image: UIImage?
@@ -68,7 +68,6 @@ struct MosaicOperationView: View {
                 GeometryReader { geo in
                     FloatingPanelView(
                         bAllText: $bAllText,
-                        bName: $bName,
                         bNumber: $bNumber,
                         bPhoneNumber: $bPhoneNumber,
                         bEmail: $bEmail,
@@ -92,6 +91,51 @@ struct MosaicOperationView: View {
                 }
             }
             
+            if showDesc {
+                VStack {
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack(alignment: .top) {
+                            Image(systemName: "slider.horizontal.3")
+                            
+                            Text("Use the filter button at the bottom to put on mosaic automatically.")
+                                .multilineTextAlignment(.leading)
+                        }
+                        
+                        HStack(alignment: .top) {
+                            Image(systemName: "hand.tap.fill")
+                            
+                            Text("Tap on the texts on the image to manually put on mosaic.")
+                                .multilineTextAlignment(.leading)
+                        }
+                        
+                        HStack(alignment: .top) {
+                            Image(systemName: "square.and.arrow.down.fill")
+                            
+                            Text("After finishing editing, you can save the photo to Photo Library.")
+                                .multilineTextAlignment(.leading)
+                        }
+                    }
+                    .foregroundColor(.white)
+                    
+                    Button {
+                        withAnimation {
+                            showDesc = false
+                        }
+                    } label: {
+                        Text("Got it!")
+                            .foregroundColor(.primary)
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 20)
+                            .background(.ultraThinMaterial, in: Capsule())
+                    }
+                }
+                .padding(20)
+                .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .transition(.move(edge: .top))
+            }
+            
             if service.rawTextItems.isEmpty {
                 ProgressView()
                     .progressViewStyle(.circular)
@@ -110,19 +154,11 @@ struct MosaicOperationView: View {
         .onChange(of: bAllText) { newValue in
             selectedItems = newValue ? Set(service.rawTextItems) : []
             if !newValue {
-                bName = false
                 bNumber = false
                 bPhoneNumber = false
                 bEmail = false
                 bUrl = false
                 bCreditCardNumber = false
-            }
-        }
-        .onChange(of: bName) { newValue in
-            if newValue {
-                selectedItems = selectedItems.union(service.nameItems)
-            } else {
-                service.nameItems.forEach { selectedItems.remove($0) }
             }
         }
         .onChange(of: bNumber) { newValue in

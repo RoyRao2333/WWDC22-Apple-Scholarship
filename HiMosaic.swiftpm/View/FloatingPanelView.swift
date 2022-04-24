@@ -10,7 +10,6 @@ import SwiftUI
 struct FloatingPanelView: View {
     @State private var showPanel = false
     @Binding var bAllText: Bool
-    @Binding var bName: Bool
     @Binding var bNumber: Bool
     @Binding var bPhoneNumber: Bool
     @Binding var bEmail: Bool
@@ -24,10 +23,6 @@ struct FloatingPanelView: View {
             if showPanel {
                 VStack(alignment: .leading, spacing: 10) {
                     Toggle("All Text", isOn: $bAllText)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                    
-                    Toggle("Names", isOn: $bName)
                         .toggleStyle(CheckboxToggleStyle(style: .square))
                         .foregroundColor(.blue)
                     
@@ -52,7 +47,7 @@ struct FloatingPanelView: View {
                         .foregroundColor(.blue)
                 }
                 .padding()
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 8))
+                .background(.ultraThickMaterial, in: RoundedRectangle(cornerRadius: 8))
                 .transition(.move(edge: .trailing))
             }
             
@@ -72,7 +67,7 @@ struct FloatingPanelView: View {
                         showPanel.toggle()
                     }
                 } label: {
-                    Image(systemName: showPanel ? "multiply" : "pencil")
+                    Image(systemName: showPanel ? "multiply" : "slider.horizontal.3")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 20, height: 20)
@@ -82,11 +77,5 @@ struct FloatingPanelView: View {
                 }
             }
         }
-    }
-}
-
-struct FloatingPanelView_Previews: PreviewProvider {
-    static var previews: some View {
-        FloatingPanelView(bAllText: .constant(true), bName: .constant(true), bNumber: .constant(true), bPhoneNumber: .constant(true), bEmail: .constant(true), bUrl: .constant(true), bCreditCardNumber: .constant(true), exportImage: {})
     }
 }

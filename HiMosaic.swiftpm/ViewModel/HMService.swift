@@ -105,8 +105,6 @@ extension HMService {
                 let matchedItem = TextItem(text: String(candidate.string[range]), normalizedRect: matchedRect)
                 
                 switch pattern {
-                    case .name:
-                        nameItems.append(matchedItem)
                     case .number:
                         numberItems.append(matchedItem)
                     case .phoneNumber:
