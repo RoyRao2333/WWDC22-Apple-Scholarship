@@ -58,7 +58,7 @@ struct FloatingPanelView: View {
             
             HStack(spacing: 10) {
                 Button(action: exportImage) {
-                    Image(systemName: "tray.and.arrow.down")
+                    Image(systemName: "square.and.arrow.down")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 20, height: 20)

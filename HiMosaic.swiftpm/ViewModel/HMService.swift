@@ -19,6 +19,7 @@ class HMService: NSObject, ObservableObject {
     @Published private(set) var emailItems: [TextItem] = []
     @Published private(set) var urlItems: [TextItem] = []
     @Published private(set) var creditCardNumberItems: [TextItem] = []
+    @Published var onStartup = true
     
     private override init() {}
 }

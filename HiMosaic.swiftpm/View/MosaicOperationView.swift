@@ -33,7 +33,7 @@ struct MosaicOperationView: View {
                             Int(geo.size.width),
                             Int(geo.size.height)
                         )
-                        
+
                         Rectangle()
                             .path(in: frame)
                             .fill(Color.black.opacity(0.0001))
@@ -41,14 +41,14 @@ struct MosaicOperationView: View {
                                 selectedItems.insert(item)
                             }
                     }
-                    
+
                     ForEach(Array(selectedItems), id: \.self) { item in
                         let frame = VNImageRectForNormalizedRect(
                             item.normalizedRect,
                             Int(geo.size.width),
                             Int(geo.size.height)
                         )
-                        
+
                         Rectangle()
                             .path(in: frame)
                             .fill(Color.gray)
@@ -164,7 +164,7 @@ struct MosaicOperationView: View {
     
     private func exportImage() {
         UIImageWriteToSavedPhotosAlbum(
-            imageView.snapshot(),
+            imageView.snapshot,
             service,
             #selector(service.saveImage),
             nil

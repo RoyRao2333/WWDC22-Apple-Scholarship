@@ -1,13 +1,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject private var service: HMService = .shared
     @State private var showPicker = false
     @State private var showDetail = false
     @State private var selectedImage: UIImage?
+    @State private var showWelcome = false
     
     var body: some View {
         NavigationView {
-            ZStack(alignment: .top) {
+            ZStack(alignment: .bottom) {
                 VStack(spacing: 20) {
                     Menu {
                         Button {
@@ -56,18 +58,37 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 
-                Text("If the result provided by auto detection is not accurate, you can always tap the texts on the image and manually put on mosaic.")
-                    .multilineTextAlignment(.center                             )
-                    .foregroundColor(.white)
-                    .padding(20)
-                    .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
-                    .padding()
+                HStack(alignment: .top) {
+                    Image(systemName: "face.smiling.fill")
+                    
+                    Text("If the result provided by auto detection is not accurate, you can always tap the texts on the image and manually put on mosaic.")
+                        .multilineTextAlignment(.center)
+                }
+                .foregroundColor(.white)
+                .padding(20)
+                .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                
+                if showWelcome {
+                    WelcomeView(showWelcome: $showWelcome)
+                        .transition(.move(edge: .bottom))
+                }
             }
             .navigationTitle("HiMosaic")
             .navigationBarTitleDisplayMode(.large)
             .onChange(of: selectedImage) { newValue in
                 withAnimation {
                     showDetail = newValue != nil
+                }
+            }
+            .onAppear {
+                if service.onStartup {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation(.easeInOut) {
+                            showWelcome = true
+                        }
+                    }
                 }
             }
         }

@@ -114,7 +114,7 @@ extension View {
         UIScreen.main.bounds
     }
 
-    func snapshot() -> UIImage {
+    var snapshot: UIImage {
         let controller = UIHostingController(rootView: self)
         let view = controller.view
 
@@ -154,6 +154,13 @@ extension UIView {
         }
         
         return view
+    }
+    
+    var snapshot: UIImage {
+        let renderer = UIGraphicsImageRenderer(size: bounds.size)
+        return renderer.image { [weak self] _ in
+            self?.drawHierarchy(in: bounds, afterScreenUpdates: true)
+        }
     }
 
     /// 添加圆角 draw 圆角失效 UILabel 不建议使用
