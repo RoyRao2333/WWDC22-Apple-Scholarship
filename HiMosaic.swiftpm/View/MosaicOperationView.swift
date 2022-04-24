@@ -17,7 +17,6 @@ struct MosaicOperationView: View {
     @State private var bEmail = false
     @State private var bUrl = false
     @State private var bCreditCardNumber = false
-    @State private var bPassportNumber = false
     @State private var selectedItems: Set<TextItem> = []
     
     @Binding var image: UIImage?
@@ -34,10 +33,6 @@ struct MosaicOperationView: View {
                             Int(geo.size.width),
                             Int(geo.size.height)
                         )
-//
-//                        Text(item.text ?? "N/A")
-//                            .foregroundColor(.red)
-//                            .position(x: frame.midX, y: frame.origin.y)
                         
                         Rectangle()
                             .path(in: frame)
@@ -67,67 +62,34 @@ struct MosaicOperationView: View {
     
     var body: some View {
         ZStack {
-            VStack(spacing: 20) {
-                Text("If the result provided below is not accurate, you can always tap the texts on the image and manually put on mosaic.")
-                    .multilineTextAlignment(.center                             )
-                    .foregroundColor(.white)
-                    .padding(20)
-                    .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
-                    .padding()
-                
+            ZStack(alignment: .center) {
                 imageView
                 
-                VStack(alignment: .leading, spacing: 10) {
-                    Toggle("All Text", isOn: $bAllText)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                    
-                    Toggle("Names", isOn: $bName)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                    
-                    Toggle("Numbers", isOn: $bNumber)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                    
-                    Toggle("Phone Numbers", isOn: $bPhoneNumber)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                    
-                    Toggle("Emails", isOn: $bEmail)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                    
-                    Toggle("URLs", isOn: $bUrl)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                    
-                    Toggle("Credit Card Numbers", isOn: $bCreditCardNumber)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                    
-                    Toggle("Passport Numbers", isOn: $bPassportNumber)
-                        .toggleStyle(CheckboxToggleStyle(style: .square))
-                        .foregroundColor(.blue)
-                }
-                
-                Spacer()
-                
-                Button(action: exportImage) {
-                    Label("Save to Photo Library", systemImage: "tray.and.arrow.down")
-                        .padding(20)
-                        .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
-                }
-                .alert(item: $service.alert) {
-                    Alert(
-                        title: Text($0.title),
-                        message: Text($0.message),
-                        dismissButton: .default(Text("OK"))
+                GeometryReader { geo in
+                    FloatingPanelView(
+                        bAllText: $bAllText,
+                        bName: $bName,
+                        bNumber: $bNumber,
+                        bPhoneNumber: $bPhoneNumber,
+                        bEmail: $bEmail,
+                        bUrl: $bUrl,
+                        bCreditCardNumber: $bCreditCardNumber,
+                        exportImage: exportImage
                     )
+                    .padding([.trailing, .bottom])
+                    .frame(
+                        width: geo.size.width,
+                        height: geo.size.height,
+                        alignment: .bottomTrailing
+                    )
+                    .alert(item: $service.alert) {
+                        Alert(
+                            title: Text($0.title),
+                            message: Text($0.message),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
                 }
-                
-                Spacer()
-                    .frame(height: 50)
             }
             
             if service.rawTextItems.isEmpty {
@@ -154,7 +116,6 @@ struct MosaicOperationView: View {
                 bEmail = false
                 bUrl = false
                 bCreditCardNumber = false
-                bPassportNumber = false
             }
         }
         .onChange(of: bName) { newValue in
@@ -197,13 +158,6 @@ struct MosaicOperationView: View {
                 selectedItems = selectedItems.union(service.creditCardNumberItems)
             } else {
                 service.creditCardNumberItems.forEach { selectedItems.remove($0) }
-            }
-        }
-        .onChange(of: bPassportNumber) { newValue in
-            if newValue {
-                selectedItems = selectedItems.union(service.passportNumberItems)
-            } else {
-                service.passportNumberItems.forEach { selectedItems.remove($0) }
             }
         }
     }

@@ -19,7 +19,6 @@ class HMService: NSObject, ObservableObject {
     @Published private(set) var emailItems: [TextItem] = []
     @Published private(set) var urlItems: [TextItem] = []
     @Published private(set) var creditCardNumberItems: [TextItem] = []
-    @Published private(set) var passportNumberItems: [TextItem] = []
     
     private override init() {}
 }
@@ -32,6 +31,14 @@ extension HMService {
             let cgImage = uiImage?.cgImage,
             let orientation = uiImage?.imageOrientation
         else { return }
+        
+        rawTextItems.removeAll()
+        nameItems.removeAll()
+        numberItems.removeAll()
+        phoneNumberItems.removeAll()
+        emailItems.removeAll()
+        urlItems.removeAll()
+        creditCardNumberItems.removeAll()
         
         let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .init(orientation))
         let textRequest = VNRecognizeTextRequest(completionHandler: onDetectedText)
@@ -109,8 +116,6 @@ extension HMService {
                         urlItems.append(matchedItem)
                     case .creditCardNumber:
                         creditCardNumberItems.append(matchedItem)
-                    case .passportNumber:
-                        passportNumberItems.append(matchedItem)
                 }
             }
         }

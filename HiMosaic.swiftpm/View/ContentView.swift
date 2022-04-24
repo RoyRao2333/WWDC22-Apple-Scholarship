@@ -7,51 +7,61 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                Menu {
-                    Button {
-                        selectedImage = .init(named: "fake_info")
+            ZStack(alignment: .top) {
+                VStack(spacing: 20) {
+                    Menu {
+                        Button {
+                            selectedImage = .init(named: "fake_info")
+                        } label: {
+                            Label("Fake Info", systemImage: "person.circle")
+                        }
+                        
+                        Button {
+                            selectedImage = .init(named: "fake_passport")
+                        } label: {
+                            Label("Fake Passport", systemImage: "person.text.rectangle")
+                        }
+                        
+                        Button {
+                            selectedImage = .init(named: "fake_form")
+                        } label: {
+                            Label("Fake Form", systemImage: "doc.richtext")
+                        }
                     } label: {
-                        Label("Fake Info", systemImage: "person.circle")
+                        Label("Select a sample", systemImage: "photo")
+                            .padding(20)
+                            .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
                     }
                     
-                    Button {
-                        selectedImage = .init(named: "fake_passport")
-                    } label: {
-                        Label("Fake Passport", systemImage: "person.text.rectangle")
-                    }
+                    Divider()
+                        .frame(width: 300)
                     
                     Button {
-                        selectedImage = .init(named: "fake_form")
+                        withAnimation {
+                            showPicker = true
+                        }
                     } label: {
-                        Label("Fake Form", systemImage: "doc.richtext")
+                        Label("Choose from Photo Library", systemImage: "photo.on.rectangle.angled")
+                            .padding(20)
+                            .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
                     }
-                } label: {
-                    Label("Select a sample", systemImage: "photo")
-                        .padding(20)
-                        .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
-                }
-                
-                Divider()
-                    .frame(width: 300)
-                
-                Button {
-                    withAnimation {
-                        showPicker = true
+                    .sheet(isPresented: $showPicker) {
+                        PhotoPicker(image: $selectedImage)
                     }
-                } label: {
-                    Label("Choose from Photo Library", systemImage: "photo.on.rectangle.angled")
-                        .padding(20)
-                        .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 10))
+                    
+                    NavigationLink(
+                        destination: MosaicOperationView(image: $selectedImage),
+                        isActive: $showDetail
+                    ) { EmptyView() }
                 }
-                .sheet(isPresented: $showPicker) {
-                    PhotoPicker(image: $selectedImage)
-                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 
-                NavigationLink(
-                    destination: MosaicOperationView(image: $selectedImage),
-                    isActive: $showDetail
-                ) { EmptyView() }
+                Text("If the result provided by auto detection is not accurate, you can always tap the texts on the image and manually put on mosaic.")
+                    .multilineTextAlignment(.center                             )
+                    .foregroundColor(.white)
+                    .padding(20)
+                    .background(Color.teal, in: RoundedRectangle(cornerRadius: 10))
+                    .padding()
             }
             .navigationTitle("HiMosaic")
             .navigationBarTitleDisplayMode(.large)
